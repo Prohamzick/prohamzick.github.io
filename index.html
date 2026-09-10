@@ -34,7 +34,7 @@
     }
 
     .wrap {
-      width: min(1120px, calc(100% - 28px));
+      width: min(920px, calc(100% - 28px));
       margin: 0 auto;
       padding: 32px 0 56px;
     }
@@ -44,13 +44,10 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 24px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       color: var(--accent-2);
       font-size: .8rem;
       font-weight: 700;
@@ -60,7 +57,7 @@
     }
 
     h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-size: clamp(2rem, 5vw, 3.4rem);
       line-height: .98;
       margin: 0 0 12px;
       letter-spacing: -.045em;
@@ -69,7 +66,7 @@
     .subtitle {
       color: var(--muted);
       margin: 0;
-      max-width: 660px;
+      max-width: 620px;
       line-height: 1.55;
     }
 
@@ -83,92 +80,102 @@
       font-size: .9rem;
     }
 
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 22px;
+    .tabs-wrap {
+      margin: 22px 0 18px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      padding-bottom: 3px;
     }
 
-    .summary-card {
-      background: rgba(17,26,45,.86);
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(92px, 1fr));
+      gap: 8px;
+      min-width: 700px;
+    }
+
+    .tab {
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: var(--shadow);
+      background: rgba(17,26,45,.8);
+      color: var(--muted);
+      border-radius: 14px;
+      padding: 11px 10px;
+      cursor: pointer;
+      font: inherit;
+      font-size: .82rem;
+      font-weight: 700;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
     }
 
-    .summary-card strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
-    .summary-card span { color: var(--muted); font-size: .86rem; }
-
-    .planner {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-      align-items: start;
+    .tab:hover { color: var(--text); }
+    .tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #07101e;
     }
 
-    .day {
-      background: rgba(17,26,45,.9);
+    .tab.today:not(.active) {
+      border-color: rgba(127,176,255,.6);
+      color: var(--accent-2);
+    }
+
+    .day-panel {
+      display: none;
+      background: rgba(17,26,45,.92);
       border: 1px solid var(--line);
       border-radius: 22px;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: transform .2s ease, border-color .2s ease;
     }
 
-    .day.today {
-      border-color: rgba(127,176,255,.7);
-      transform: translateY(-3px);
-    }
+    .day-panel.active { display: block; }
 
     .day-head {
-      padding: 16px 16px 14px;
+      padding: 20px 20px 16px;
       border-bottom: 1px solid var(--line);
       background: rgba(255,255,255,.025);
     }
 
-    .day-head .topline {
+    .day-head-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 16px;
     }
 
-    .day h2 {
+    .day-head h2 {
       margin: 0;
-      font-size: 1.12rem;
-      letter-spacing: -.02em;
+      font-size: 1.45rem;
+      letter-spacing: -.025em;
     }
 
     .day-note {
       color: var(--muted);
-      font-size: .78rem;
+      font-size: .84rem;
       margin-top: 5px;
     }
 
     .today-pill {
       display: none;
-      font-size: .68rem;
-      font-weight: 700;
+      font-size: .7rem;
+      font-weight: 800;
       color: #07101e;
       background: var(--accent);
-      padding: 4px 7px;
+      padding: 5px 8px;
       border-radius: 999px;
       text-transform: uppercase;
       letter-spacing: .05em;
     }
 
-    .day.today .today-pill { display: inline-block; }
+    .day-panel.today .today-pill { display: inline-block; }
 
-    .tasks { padding: 10px; }
+    .tasks { padding: 10px 12px 14px; }
 
     .task {
-      position: relative;
       display: grid;
-      grid-template-columns: 20px 1fr;
-      gap: 9px;
-      padding: 11px 9px;
+      grid-template-columns: 22px 1fr;
+      gap: 11px;
+      padding: 13px 10px;
       border-radius: 14px;
       cursor: pointer;
       transition: background .15s ease;
@@ -179,8 +186,8 @@
 
     .task input {
       appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 19px;
+      height: 19px;
       border: 1.5px solid rgba(255,255,255,.25);
       border-radius: 6px;
       margin: 2px 0 0;
@@ -198,20 +205,19 @@
     .task input:checked::after {
       content: "✓";
       color: #07120d;
-      font-size: .78rem;
+      font-size: .8rem;
       font-weight: 900;
     }
 
-    .task-main { min-width: 0; }
     .time {
       color: var(--accent-2);
-      font-size: .72rem;
-      font-weight: 750;
-      margin-bottom: 3px;
-      letter-spacing: .015em;
+      font-size: .75rem;
+      font-weight: 800;
+      margin-bottom: 4px;
     }
-    .label { font-size: .88rem; line-height: 1.3; }
-    .meta { margin-top: 4px; color: var(--muted); font-size: .72rem; line-height: 1.35; }
+
+    .label { font-size: .94rem; line-height: 1.3; }
+    .meta { margin-top: 4px; color: var(--muted); font-size: .76rem; line-height: 1.4; }
 
     .task.checked .label,
     .task.checked .time,
@@ -226,17 +232,17 @@
     .task[data-kind="break"] .time { color: var(--muted); }
 
     .off-day {
-      padding: 24px 18px 26px;
+      padding: 34px 22px 38px;
       text-align: center;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
-    .off-icon { font-size: 2rem; margin-bottom: 8px; }
+    .off-icon { font-size: 2.1rem; margin-bottom: 8px; }
     .off-day strong { display: block; color: var(--text); margin-bottom: 5px; }
 
     .progress-panel {
-      margin-top: 22px;
+      margin-top: 20px;
       background: rgba(17,26,45,.92);
       border: 1px solid var(--line);
       border-radius: 22px;
@@ -282,7 +288,7 @@
       font-size: .78rem;
     }
 
-    button {
+    .reset-button {
       border: 1px solid var(--line);
       background: rgba(255,255,255,.04);
       color: var(--muted);
@@ -292,7 +298,8 @@
       font: inherit;
       font-size: .76rem;
     }
-    button:hover { color: var(--text); background: rgba(255,255,255,.07); }
+
+    .reset-button:hover { color: var(--text); background: rgba(255,255,255,.07); }
 
     .footer-note {
       text-align: center;
@@ -302,18 +309,11 @@
       line-height: 1.5;
     }
 
-    @media (max-width: 980px) {
-      .planner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .summary { grid-template-columns: repeat(2, 1fr); }
-    }
-
     @media (max-width: 620px) {
-      .wrap { width: min(100% - 18px, 1120px); padding-top: 20px; }
+      .wrap { width: min(100% - 18px, 920px); padding-top: 20px; }
       header { display: block; }
-      .week-badge { display: inline-block; margin-top: 15px; }
-      .planner { grid-template-columns: 1fr; }
-      .summary { grid-template-columns: 1fr 1fr; gap: 9px; }
-      .summary-card { padding: 13px; }
+      .week-badge { display: inline-block; margin-top: 14px; }
+      .tabs { min-width: 650px; }
       .progress-top { align-items: center; }
       .progress-bottom { align-items: flex-start; flex-direction: column; }
     }
@@ -325,86 +325,99 @@
       <div>
         <div class="eyebrow">Fall 2026 · York University</div>
         <h1>University Weekly Planner</h1>
-        <p class="subtitle">A fixed weekly structure built around classes, readings, focused work, and keeping Friday protected. Check items off as you go; progress resets automatically each Monday.</p>
+        <p class="subtitle">Use the day tabs to focus on one day at a time. Check blocks off as you finish them; your progress is saved in this browser and resets automatically each Monday.</p>
       </div>
       <div class="week-badge" id="weekBadge">This week</div>
     </header>
 
-    <section class="summary" aria-label="Weekly summary">
-      <div class="summary-card"><strong>Mon + Wed</strong><span>Online + home study days</span></div>
-      <div class="summary-card"><strong>Tue + Thu</strong><span>York Keele campus days</span></div>
-      <div class="summary-card"><strong>Thursday late</strong><span>Stay until ~8:45 PM, avoid rush hour</span></div>
-      <div class="summary-card"><strong>Friday</strong><span>Protected day off</span></div>
-    </section>
+    <div class="tabs-wrap" aria-label="Choose a day">
+      <div class="tabs" role="tablist">
+        <button class="tab" type="button" role="tab" data-day="1">Monday</button>
+        <button class="tab" type="button" role="tab" data-day="2">Tuesday</button>
+        <button class="tab" type="button" role="tab" data-day="3">Wednesday</button>
+        <button class="tab" type="button" role="tab" data-day="4">Thursday</button>
+        <button class="tab" type="button" role="tab" data-day="5">Friday</button>
+        <button class="tab" type="button" role="tab" data-day="6">Saturday</button>
+        <button class="tab" type="button" role="tab" data-day="0">Sunday</button>
+      </div>
+    </div>
 
-    <section class="planner" id="planner">
-      <article class="day" data-day="1">
-        <div class="day-head"><div class="topline"><h2>Monday</h2><span class="today-pill">Today</span></div><div class="day-note">Online · home study day</div></div>
+    <section id="days">
+      <article class="day-panel" data-day="1">
+        <div class="day-head"><div class="day-head-top"><h2>Monday</h2><span class="today-pill">Today</span></div><div class="day-note">Online · home study day</div></div>
         <div class="tasks">
-          <label class="task" data-id="mon-0900" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">9:00–9:30 AM</div><div class="label">Wake up + breakfast</div></div></label>
-          <label class="task" data-id="mon-0930" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">9:30–11:00 AM</div><div class="label">HIST 1010 readings</div><div class="meta">Prepare for Tuesday tutorial</div></div></label>
-          <label class="task" data-id="mon-1100" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">11:00–11:30 AM</div><div class="label">Break</div></div></label>
-          <label class="task" data-id="mon-1130"><input type="checkbox"><div class="task-main"><div class="time">11:30 AM–1:00 PM</div><div class="label">ENVS 2403 Lecture</div><div class="meta">Online</div></div></label>
-          <label class="task" data-id="mon-1300"><input type="checkbox"><div class="task-main"><div class="time">1:00–2:30 PM</div><div class="label">ENVS 2403 Tutorial</div><div class="meta">Online</div></div></label>
-          <label class="task" data-id="mon-1430" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">2:30–3:15 PM</div><div class="label">Lunch</div></div></label>
-          <label class="task" data-id="mon-1515" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">3:15–4:45 PM</div><div class="label">GEOG 2220 readings</div><div class="meta">Prepare for Tuesday tutorial</div></div></label>
-          <label class="task" data-id="mon-1645" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">4:45–5:15 PM</div><div class="label">Break</div></div></label>
-          <label class="task" data-id="mon-1715" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">5:15–6:15 PM</div><div class="label">Flexible assignment block</div><div class="meta">Assignments, review, or catch-up</div></div></label>
+          <label class="task" data-id="mon-0900" data-kind="break"><input type="checkbox"><div><div class="time">9:00–9:30 AM</div><div class="label">Wake up + breakfast</div></div></label>
+          <label class="task" data-id="mon-0930" data-kind="reading"><input type="checkbox"><div><div class="time">9:30–11:00 AM</div><div class="label">HIST 1010 readings</div><div class="meta">Prepare for Tuesday tutorial</div></div></label>
+          <label class="task" data-id="mon-1100" data-kind="break"><input type="checkbox"><div><div class="time">11:00–11:30 AM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="mon-1130"><input type="checkbox"><div><div class="time">11:30 AM–1:00 PM</div><div class="label">ENVS 2403 Lecture</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="mon-1300"><input type="checkbox"><div><div class="time">1:00–2:30 PM</div><div class="label">ENVS 2403 Tutorial</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="mon-1430" data-kind="break"><input type="checkbox"><div><div class="time">2:30–3:15 PM</div><div class="label">Lunch</div></div></label>
+          <label class="task" data-id="mon-1515" data-kind="reading"><input type="checkbox"><div><div class="time">3:15–4:45 PM</div><div class="label">GEOG 2220 readings</div><div class="meta">Prepare for Tuesday tutorial</div></div></label>
+          <label class="task" data-id="mon-1645" data-kind="break"><input type="checkbox"><div><div class="time">4:45–5:15 PM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="mon-1715" data-kind="study"><input type="checkbox"><div><div class="time">5:15–6:15 PM</div><div class="label">Flexible assignment block</div><div class="meta">Assignments, review, or catch-up</div></div></label>
         </div>
       </article>
 
-      <article class="day" data-day="2">
-        <div class="day-head"><div class="topline"><h2>Tuesday</h2><span class="today-pill">Today</span></div><div class="day-note">York Keele · campus day</div></div>
+      <article class="day-panel" data-day="2">
+        <div class="day-head"><div class="day-head-top"><h2>Tuesday</h2><span class="today-pill">Today</span></div><div class="day-note">York Keele · campus day</div></div>
         <div class="tasks">
-          <label class="task" data-id="tue-commute" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">Before 8:30 AM</div><div class="label">Commute to York</div></div></label>
-          <label class="task" data-id="tue-0830"><input type="checkbox"><div class="task-main"><div class="time">8:30–9:30 AM</div><div class="label">HIST 1010 Tutorial</div><div class="meta">MC 109</div></div></label>
-          <label class="task" data-id="tue-0930" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">9:30–10:00 AM</div><div class="label">Break</div></div></label>
-          <label class="task" data-id="tue-1000"><input type="checkbox"><div class="task-main"><div class="time">10:00–11:30 AM</div><div class="label">GEOG 2220 Lecture</div><div class="meta">ACW 005</div></div></label>
-          <label class="task" data-id="tue-1130"><input type="checkbox"><div class="task-main"><div class="time">11:30 AM–12:30 PM</div><div class="label">HIST 1010 Lecture</div><div class="meta">ACW 109 · corrected time</div></div></label>
-          <label class="task" data-id="tue-1230" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">12:30–2:00 PM</div><div class="label">Lunch + break</div></div></label>
-          <label class="task" data-id="tue-1400" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">2:00–2:30 PM</div><div class="label">Light review / chill</div></div></label>
-          <label class="task" data-id="tue-1430"><input type="checkbox"><div class="task-main"><div class="time">2:30–3:30 PM</div><div class="label">GEOG 2220 Tutorial</div><div class="meta">ACE 006</div></div></label>
+          <label class="task" data-id="tue-commute" data-kind="break"><input type="checkbox"><div><div class="time">Before 8:30 AM</div><div class="label">Commute to York</div></div></label>
+          <label class="task" data-id="tue-0830"><input type="checkbox"><div><div class="time">8:30–9:30 AM</div><div class="label">HIST 1010 Tutorial</div><div class="meta">MC 109</div></div></label>
+          <label class="task" data-id="tue-0930" data-kind="break"><input type="checkbox"><div><div class="time">9:30–10:00 AM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="tue-1000"><input type="checkbox"><div><div class="time">10:00–11:30 AM</div><div class="label">GEOG 2220 Lecture</div><div class="meta">ACW 005</div></div></label>
+          <label class="task" data-id="tue-1130"><input type="checkbox"><div><div class="time">11:30 AM–12:30 PM</div><div class="label">HIST 1010 Lecture</div><div class="meta">ACW 109 · corrected time</div></div></label>
+          <label class="task" data-id="tue-1230" data-kind="break"><input type="checkbox"><div><div class="time">12:30–2:00 PM</div><div class="label">Lunch + break</div></div></label>
+          <label class="task" data-id="tue-1400" data-kind="study"><input type="checkbox"><div><div class="time">2:00–2:30 PM</div><div class="label">Light review / chill</div></div></label>
+          <label class="task" data-id="tue-1430"><input type="checkbox"><div><div class="time">2:30–3:30 PM</div><div class="label">GEOG 2220 Tutorial</div><div class="meta">ACE 006</div></div></label>
         </div>
       </article>
 
-      <article class="day" data-day="3">
-        <div class="day-head"><div class="topline"><h2>Wednesday</h2><span class="today-pill">Today</span></div><div class="day-note">Online · home study day</div></div>
+      <article class="day-panel" data-day="3">
+        <div class="day-head"><div class="day-head-top"><h2>Wednesday</h2><span class="today-pill">Today</span></div><div class="day-note">Online · home study day</div></div>
         <div class="tasks">
-          <label class="task" data-id="wed-1000" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">10:00–10:30 AM</div><div class="label">Breakfast + setup</div></div></label>
-          <label class="task" data-id="wed-1030" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">10:30 AM–12:00 PM</div><div class="label">ENVS 2201 readings</div><div class="meta">Prepare for Thursday tutorial</div></div></label>
-          <label class="task" data-id="wed-1200" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">12:00–1:00 PM</div><div class="label">Lunch + break</div></div></label>
-          <label class="task" data-id="wed-1300" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">1:00–2:30 PM</div><div class="label">GEOG 2320 readings</div><div class="meta">Prepare before tutorial</div></div></label>
-          <label class="task" data-id="wed-1430"><input type="checkbox"><div class="task-main"><div class="time">2:30–4:00 PM</div><div class="label">GEOG 2320 Lecture</div><div class="meta">Online</div></div></label>
-          <label class="task" data-id="wed-1600" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">4:00–4:30 PM</div><div class="label">Break</div></div></label>
-          <label class="task" data-id="wed-1630"><input type="checkbox"><div class="task-main"><div class="time">4:30–5:30 PM</div><div class="label">GEOG 2320 Tutorial</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="wed-1000" data-kind="break"><input type="checkbox"><div><div class="time">10:00–10:30 AM</div><div class="label">Breakfast + setup</div></div></label>
+          <label class="task" data-id="wed-1030" data-kind="reading"><input type="checkbox"><div><div class="time">10:30 AM–12:00 PM</div><div class="label">ENVS 2201 readings</div><div class="meta">Prepare for Thursday tutorial</div></div></label>
+          <label class="task" data-id="wed-1200" data-kind="break"><input type="checkbox"><div><div class="time">12:00–1:00 PM</div><div class="label">Lunch + break</div></div></label>
+          <label class="task" data-id="wed-1300" data-kind="reading"><input type="checkbox"><div><div class="time">1:00–2:30 PM</div><div class="label">GEOG 2320 readings</div><div class="meta">Prepare before tutorial</div></div></label>
+          <label class="task" data-id="wed-1430"><input type="checkbox"><div><div class="time">2:30–4:00 PM</div><div class="label">GEOG 2320 Lecture</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="wed-1600" data-kind="break"><input type="checkbox"><div><div class="time">4:00–4:30 PM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="wed-1630"><input type="checkbox"><div><div class="time">4:30–5:30 PM</div><div class="label">GEOG 2320 Tutorial</div><div class="meta">Online</div></div></label>
         </div>
       </article>
 
-      <article class="day" data-day="4">
-        <div class="day-head"><div class="topline"><h2>Thursday</h2><span class="today-pill">Today</span></div><div class="day-note">York Keele · stay late to avoid rush hour</div></div>
+      <article class="day-panel" data-day="4">
+        <div class="day-head"><div class="day-head-top"><h2>Thursday</h2><span class="today-pill">Today</span></div><div class="day-note">York Keele · stay late to avoid rush hour</div></div>
         <div class="tasks">
-          <label class="task" data-id="thu-commute" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">Morning</div><div class="label">Commute to York</div></div></label>
-          <label class="task" data-id="thu-1000"><input type="checkbox"><div class="task-main"><div class="time">10:00–11:30 AM</div><div class="label">GEOG 2220 Lecture</div><div class="meta">ACW 005</div></div></label>
-          <label class="task" data-id="thu-1130"><input type="checkbox"><div class="task-main"><div class="time">11:30 AM–12:30 PM</div><div class="label">HIST 1010 Lecture</div><div class="meta">ACW 109 · corrected time</div></div></label>
-          <label class="task" data-id="thu-1230" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">12:30–2:00 PM</div><div class="label">Lunch + break</div></div></label>
-          <label class="task" data-id="thu-1400" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">2:00–2:30 PM</div><div class="label">Quick admin / eClass check</div></div></label>
-          <label class="task" data-id="thu-1430"><input type="checkbox"><div class="task-main"><div class="time">2:30–4:00 PM</div><div class="label">ENVS 2201 Lecture</div><div class="meta">HNE 038</div></div></label>
-          <label class="task" data-id="thu-1600" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">4:00–4:30 PM</div><div class="label">Break</div></div></label>
-          <label class="task" data-id="thu-1630"><input type="checkbox"><div class="task-main"><div class="time">4:30–5:30 PM</div><div class="label">ENVS 2201 Tutorial</div><div class="meta">HNE B10</div></div></label>
-          <label class="task" data-id="thu-1730" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">5:30–6:15 PM</div><div class="label">Dinner + real break</div></div></label>
-          <label class="task" data-id="thu-1815" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">6:15–7:45 PM</div><div class="label">Deep Work Block #1</div><div class="meta">Highest-priority assignment, lab, project, midterm study, or upcoming reading</div></div></label>
-          <label class="task" data-id="thu-1945" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">7:45–8:00 PM</div><div class="label">Break + walk</div></div></label>
-          <label class="task" data-id="thu-2000" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">8:00–8:45 PM</div><div class="label">Deep Work Block #2</div><div class="meta">Finish work, organize notes, submit, or check deadlines</div></div></label>
-          <label class="task" data-id="thu-2045" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">~8:45 PM</div><div class="label">Leave York</div><div class="meta">Night completely done</div></div></label>
+          <label class="task" data-id="thu-commute" data-kind="break"><input type="checkbox"><div><div class="time">Morning</div><div class="label">Commute to York</div></div></label>
+          <label class="task" data-id="thu-1000"><input type="checkbox"><div><div class="time">10:00–11:30 AM</div><div class="label">GEOG 2220 Lecture</div><div class="meta">ACW 005</div></div></label>
+          <label class="task" data-id="thu-1130"><input type="checkbox"><div><div class="time">11:30 AM–12:30 PM</div><div class="label">HIST 1010 Lecture</div><div class="meta">ACW 109 · corrected time</div></div></label>
+          <label class="task" data-id="thu-1230" data-kind="break"><input type="checkbox"><div><div class="time">12:30–2:00 PM</div><div class="label">Lunch + break</div></div></label>
+          <label class="task" data-id="thu-1400" data-kind="study"><input type="checkbox"><div><div class="time">2:00–2:30 PM</div><div class="label">Quick admin / eClass check</div></div></label>
+          <label class="task" data-id="thu-1430"><input type="checkbox"><div><div class="time">2:30–4:00 PM</div><div class="label">ENVS 2201 Lecture</div><div class="meta">HNE 038</div></div></label>
+          <label class="task" data-id="thu-1600" data-kind="break"><input type="checkbox"><div><div class="time">4:00–4:30 PM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="thu-1630"><input type="checkbox"><div><div class="time">4:30–5:30 PM</div><div class="label">ENVS 2201 Tutorial</div><div class="meta">HNE B10</div></div></label>
+          <label class="task" data-id="thu-1730" data-kind="break"><input type="checkbox"><div><div class="time">5:30–6:15 PM</div><div class="label">Dinner + real break</div></div></label>
+          <label class="task" data-id="thu-1815" data-kind="study"><input type="checkbox"><div><div class="time">6:15–7:45 PM</div><div class="label">Deep Work Block #1</div><div class="meta">Highest-priority assignment, lab, project, midterm study, or upcoming reading</div></div></label>
+          <label class="task" data-id="thu-1945" data-kind="break"><input type="checkbox"><div><div class="time">7:45–8:00 PM</div><div class="label">Break + walk</div></div></label>
+          <label class="task" data-id="thu-2000" data-kind="study"><input type="checkbox"><div><div class="time">8:00–8:45 PM</div><div class="label">Deep Work Block #2</div><div class="meta">Finish work, organize notes, submit, or check deadlines</div></div></label>
+          <label class="task" data-id="thu-2045" data-kind="break"><input type="checkbox"><div><div class="time">~8:45 PM</div><div class="label">Leave York</div><div class="meta">Night completely done</div></div></label>
         </div>
       </article>
 
-      <article class="day" data-day="5">
-        <div class="day-head"><div class="topline"><h2>Friday</h2><span class="today-pill">Today</span></div><div class="day-note">Protected day off</div></div>
-        <div class="off-day">
-          <div class="off-icon">☀️</div>
-          <strong>No scheduled university work.</strong>
-          No recurring reading block. No mandatory “just one hour.” Friday stays protected unless you deliberately use it for an exceptional exam or deadline week.
+      <article class="day-panel" data-day="5">
+        <div class="day-head"><div class="day-head-top"><h2>Friday</h2><span class="today-pill">Today</span></div><div class="day-note">Protected day off</div></div>
+        <div class="off-day"><div class="off-icon">☀️</div><strong>No scheduled university work.</strong>Friday stays protected unless you deliberately use it for an exceptional exam or deadline week.</div>
+      </article>
+
+      <article class="day-panel" data-day="6">
+        <div class="day-head"><div class="day-head-top"><h2>Saturday</h2><span class="today-pill">Today</span></div><div class="day-note">Open / personal day</div></div>
+        <div class="off-day"><div class="off-icon">🌿</div><strong>No recurring university block.</strong>Keep Saturday open for work, plans, recovery, or optional catch-up only when you choose.</div>
+      </article>
+
+      <article class="day-panel" data-day="0">
+        <div class="day-head"><div class="day-head-top"><h2>Sunday</h2><span class="today-pill">Today</span></div><div class="day-note">Light preparation for Monday</div></div>
+        <div class="tasks">
+          <label class="task" data-id="sun-envs2403-reading" data-kind="reading"><input type="checkbox"><div><div class="time">1 hr 30 min</div><div class="label">ENVS 2403 readings / study</div><div class="meta">Prepare for Monday tutorial. No fixed clock time preserved from the earlier planner.</div></div></label>
         </div>
       </article>
     </section>
@@ -417,14 +430,16 @@
       <div class="bar" aria-label="Weekly progress"><div class="fill" id="progressFill"></div></div>
       <div class="progress-bottom">
         <span id="resetText">Automatically resets every Monday.</span>
-        <button id="resetButton" type="button">Reset this week</button>
+        <button class="reset-button" id="resetButton" type="button">Reset this week</button>
       </div>
     </section>
 
-    <div class="footer-note">Progress is saved only in this browser. The schedule itself stays fixed until the site is updated.</div>
+    <div class="footer-note">Progress is saved only in this browser. The hosted schedule stays at the same bookmark when future updates are published.</div>
   </main>
 
   <script>
+    const tabs = [...document.querySelectorAll('.tab[data-day]')];
+    const panels = [...document.querySelectorAll('.day-panel[data-day]')];
     const taskEls = [...document.querySelectorAll('.task[data-id]')];
     const inputs = taskEls.map(t => t.querySelector('input'));
     const progressFill = document.getElementById('progressFill');
@@ -449,17 +464,39 @@
       return `${y}-${m}-${day}`;
     }
 
-    const monday = getMonday();
-    const weekKey = `university-planner:${isoDate(monday)}`;
-
     function formatShort(d) {
       return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
     }
 
+    const monday = getMonday();
+    const weekKey = `university-planner:${isoDate(monday)}`;
     const sunday = new Date(monday);
     sunday.setDate(sunday.getDate() + 6);
     weekBadge.textContent = `${formatShort(monday)} – ${formatShort(sunday)}`;
     resetText.textContent = `Automatically resets next Monday (${formatShort(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 7))}).`;
+
+    function showDay(day) {
+      tabs.forEach(tab => {
+        const active = Number(tab.dataset.day) === day;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      panels.forEach(panel => panel.classList.toggle('active', Number(panel.dataset.day) === day));
+      try { localStorage.setItem('university-planner:last-day', String(day)); } catch (_) {}
+    }
+
+    const today = new Date().getDay();
+    tabs.forEach(tab => tab.classList.toggle('today', Number(tab.dataset.day) === today));
+    panels.forEach(panel => panel.classList.toggle('today', Number(panel.dataset.day) === today));
+
+    tabs.forEach(tab => tab.addEventListener('click', () => showDay(Number(tab.dataset.day))));
+
+    let initialDay = today;
+    try {
+      const savedDay = Number(localStorage.getItem('university-planner:last-day'));
+      if (Number.isInteger(savedDay) && savedDay >= 0 && savedDay <= 6) initialDay = savedDay;
+    } catch (_) {}
+    showDay(initialDay);
 
     function loadState() {
       let saved = {};
@@ -474,9 +511,7 @@
 
     function saveState() {
       const state = {};
-      taskEls.forEach(task => {
-        state[task.dataset.id] = task.querySelector('input').checked;
-      });
+      taskEls.forEach(task => { state[task.dataset.id] = task.querySelector('input').checked; });
       localStorage.setItem(weekKey, JSON.stringify(state));
     }
 
@@ -505,13 +540,6 @@
       localStorage.removeItem(weekKey);
       updateProgress();
     });
-
-    const jsDay = new Date().getDay();
-    const todayDay = jsDay >= 1 && jsDay <= 5 ? jsDay : null;
-    if (todayDay) {
-      const todayCard = document.querySelector(`.day[data-day="${todayDay}"]`);
-      if (todayCard) todayCard.classList.add('today');
-    }
 
     loadState();
   </script>
