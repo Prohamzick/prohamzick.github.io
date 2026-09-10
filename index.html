@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1020" />
+  <title>University Weekly Planner</title>
+  <style>
+    :root {
+      --bg: #08101f;
+      --panel: #111a2d;
+      --panel-2: #16223a;
+      --text: #f7f9fc;
+      --muted: #9eabc2;
+      --line: rgba(255,255,255,.09);
+      --accent: #7fb0ff;
+      --accent-2: #a7c8ff;
+      --green: #62d39a;
+      --amber: #f4bf65;
+      --pink: #df8bc2;
+      --shadow: 0 18px 55px rgba(0,0,0,.28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(71,122,214,.18), transparent 28rem),
+        linear-gradient(180deg, #07101e 0%, #0a1221 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-2);
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 9px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: .98;
+      margin: 0 0 12px;
+      letter-spacing: -.045em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      max-width: 660px;
+      line-height: 1.55;
+    }
+
+    .week-badge {
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.045);
+      padding: 11px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .summary-card {
+      background: rgba(17,26,45,.86);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-card strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+    .summary-card span { color: var(--muted); font-size: .86rem; }
+
+    .planner {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    .day {
+      background: rgba(17,26,45,.9);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+
+    .day.today {
+      border-color: rgba(127,176,255,.7);
+      transform: translateY(-3px);
+    }
+
+    .day-head {
+      padding: 16px 16px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.025);
+    }
+
+    .day-head .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .day h2 {
+      margin: 0;
+      font-size: 1.12rem;
+      letter-spacing: -.02em;
+    }
+
+    .day-note {
+      color: var(--muted);
+      font-size: .78rem;
+      margin-top: 5px;
+    }
+
+    .today-pill {
+      display: none;
+      font-size: .68rem;
+      font-weight: 700;
+      color: #07101e;
+      background: var(--accent);
+      padding: 4px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .day.today .today-pill { display: inline-block; }
+
+    .tasks { padding: 10px; }
+
+    .task {
+      position: relative;
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 9px;
+      padding: 11px 9px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background .15s ease;
+    }
+
+    .task:hover { background: rgba(255,255,255,.035); }
+    .task + .task { border-top: 1px solid rgba(255,255,255,.055); }
+
+    .task input {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid rgba(255,255,255,.25);
+      border-radius: 6px;
+      margin: 2px 0 0;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      background: rgba(255,255,255,.025);
+    }
+
+    .task input:checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .task input:checked::after {
+      content: "✓";
+      color: #07120d;
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .task-main { min-width: 0; }
+    .time {
+      color: var(--accent-2);
+      font-size: .72rem;
+      font-weight: 750;
+      margin-bottom: 3px;
+      letter-spacing: .015em;
+    }
+    .label { font-size: .88rem; line-height: 1.3; }
+    .meta { margin-top: 4px; color: var(--muted); font-size: .72rem; line-height: 1.35; }
+
+    .task.checked .label,
+    .task.checked .time,
+    .task.checked .meta {
+      opacity: .43;
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .task[data-kind="reading"] .time { color: var(--amber); }
+    .task[data-kind="study"] .time { color: var(--pink); }
+    .task[data-kind="break"] .time { color: var(--muted); }
+
+    .off-day {
+      padding: 24px 18px 26px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .off-icon { font-size: 2rem; margin-bottom: 8px; }
+    .off-day strong { display: block; color: var(--text); margin-bottom: 5px; }
+
+    .progress-panel {
+      margin-top: 22px;
+      background: rgba(17,26,45,.92);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .progress-title { margin: 0; font-size: 1.15rem; }
+    .progress-copy { color: var(--muted); font-size: .82rem; margin-top: 4px; }
+    .progress-number { font-size: 1.4rem; font-weight: 800; letter-spacing: -.03em; }
+
+    .bar {
+      width: 100%;
+      height: 13px;
+      background: rgba(255,255,255,.07);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      transition: width .3s ease;
+    }
+
+    .progress-bottom {
+      margin-top: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      border-radius: 10px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font: inherit;
+      font-size: .76rem;
+    }
+    button:hover { color: var(--text); background: rgba(255,255,255,.07); }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: .74rem;
+      margin-top: 18px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 980px) {
+      .planner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 18px, 1120px); padding-top: 20px; }
+      header { display: block; }
+      .week-badge { display: inline-block; margin-top: 15px; }
+      .planner { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: 1fr 1fr; gap: 9px; }
+      .summary-card { padding: 13px; }
+      .progress-top { align-items: center; }
+      .progress-bottom { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div>
+        <div class="eyebrow">Fall 2026 · York University</div>
+        <h1>University Weekly Planner</h1>
+        <p class="subtitle">A fixed weekly structure built around classes, readings, focused work, and keeping Friday protected. Check items off as you go; progress resets automatically each Monday.</p>
+      </div>
+      <div class="week-badge" id="weekBadge">This week</div>
+    </header>
+
+    <section class="summary" aria-label="Weekly summary">
+      <div class="summary-card"><strong>Mon + Wed</strong><span>Online + home study days</span></div>
+      <div class="summary-card"><strong>Tue + Thu</strong><span>York Keele campus days</span></div>
+      <div class="summary-card"><strong>Thursday late</strong><span>Stay until ~8:45 PM, avoid rush hour</span></div>
+      <div class="summary-card"><strong>Friday</strong><span>Protected day off</span></div>
+    </section>
+
+    <section class="planner" id="planner">
+      <article class="day" data-day="1">
+        <div class="day-head"><div class="topline"><h2>Monday</h2><span class="today-pill">Today</span></div><div class="day-note">Online · home study day</div></div>
+        <div class="tasks">
+          <label class="task" data-id="mon-0900" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">9:00–9:30 AM</div><div class="label">Wake up + breakfast</div></div></label>
+          <label class="task" data-id="mon-0930" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">9:30–11:00 AM</div><div class="label">HIST 1010 readings</div><div class="meta">Prepare for Tuesday tutorial</div></div></label>
+          <label class="task" data-id="mon-1100" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">11:00–11:30 AM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="mon-1130"><input type="checkbox"><div class="task-main"><div class="time">11:30 AM–1:00 PM</div><div class="label">ENVS 2403 Lecture</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="mon-1300"><input type="checkbox"><div class="task-main"><div class="time">1:00–2:30 PM</div><div class="label">ENVS 2403 Tutorial</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="mon-1430" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">2:30–3:15 PM</div><div class="label">Lunch</div></div></label>
+          <label class="task" data-id="mon-1515" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">3:15–4:45 PM</div><div class="label">GEOG 2220 readings</div><div class="meta">Prepare for Tuesday tutorial</div></div></label>
+          <label class="task" data-id="mon-1645" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">4:45–5:15 PM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="mon-1715" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">5:15–6:15 PM</div><div class="label">Flexible assignment block</div><div class="meta">Assignments, review, or catch-up</div></div></label>
+        </div>
+      </article>
+
+      <article class="day" data-day="2">
+        <div class="day-head"><div class="topline"><h2>Tuesday</h2><span class="today-pill">Today</span></div><div class="day-note">York Keele · campus day</div></div>
+        <div class="tasks">
+          <label class="task" data-id="tue-commute" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">Before 8:30 AM</div><div class="label">Commute to York</div></div></label>
+          <label class="task" data-id="tue-0830"><input type="checkbox"><div class="task-main"><div class="time">8:30–9:30 AM</div><div class="label">HIST 1010 Tutorial</div><div class="meta">MC 109</div></div></label>
+          <label class="task" data-id="tue-0930" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">9:30–10:00 AM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="tue-1000"><input type="checkbox"><div class="task-main"><div class="time">10:00–11:30 AM</div><div class="label">GEOG 2220 Lecture</div><div class="meta">ACW 005</div></div></label>
+          <label class="task" data-id="tue-1130"><input type="checkbox"><div class="task-main"><div class="time">11:30 AM–12:30 PM</div><div class="label">HIST 1010 Lecture</div><div class="meta">ACW 109 · corrected time</div></div></label>
+          <label class="task" data-id="tue-1230" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">12:30–2:00 PM</div><div class="label">Lunch + break</div></div></label>
+          <label class="task" data-id="tue-1400" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">2:00–2:30 PM</div><div class="label">Light review / chill</div></div></label>
+          <label class="task" data-id="tue-1430"><input type="checkbox"><div class="task-main"><div class="time">2:30–3:30 PM</div><div class="label">GEOG 2220 Tutorial</div><div class="meta">ACE 006</div></div></label>
+        </div>
+      </article>
+
+      <article class="day" data-day="3">
+        <div class="day-head"><div class="topline"><h2>Wednesday</h2><span class="today-pill">Today</span></div><div class="day-note">Online · home study day</div></div>
+        <div class="tasks">
+          <label class="task" data-id="wed-1000" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">10:00–10:30 AM</div><div class="label">Breakfast + setup</div></div></label>
+          <label class="task" data-id="wed-1030" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">10:30 AM–12:00 PM</div><div class="label">ENVS 2201 readings</div><div class="meta">Prepare for Thursday tutorial</div></div></label>
+          <label class="task" data-id="wed-1200" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">12:00–1:00 PM</div><div class="label">Lunch + break</div></div></label>
+          <label class="task" data-id="wed-1300" data-kind="reading"><input type="checkbox"><div class="task-main"><div class="time">1:00–2:30 PM</div><div class="label">GEOG 2320 readings</div><div class="meta">Prepare before tutorial</div></div></label>
+          <label class="task" data-id="wed-1430"><input type="checkbox"><div class="task-main"><div class="time">2:30–4:00 PM</div><div class="label">GEOG 2320 Lecture</div><div class="meta">Online</div></div></label>
+          <label class="task" data-id="wed-1600" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">4:00–4:30 PM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="wed-1630"><input type="checkbox"><div class="task-main"><div class="time">4:30–5:30 PM</div><div class="label">GEOG 2320 Tutorial</div><div class="meta">Online</div></div></label>
+        </div>
+      </article>
+
+      <article class="day" data-day="4">
+        <div class="day-head"><div class="topline"><h2>Thursday</h2><span class="today-pill">Today</span></div><div class="day-note">York Keele · stay late to avoid rush hour</div></div>
+        <div class="tasks">
+          <label class="task" data-id="thu-commute" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">Morning</div><div class="label">Commute to York</div></div></label>
+          <label class="task" data-id="thu-1000"><input type="checkbox"><div class="task-main"><div class="time">10:00–11:30 AM</div><div class="label">GEOG 2220 Lecture</div><div class="meta">ACW 005</div></div></label>
+          <label class="task" data-id="thu-1130"><input type="checkbox"><div class="task-main"><div class="time">11:30 AM–12:30 PM</div><div class="label">HIST 1010 Lecture</div><div class="meta">ACW 109 · corrected time</div></div></label>
+          <label class="task" data-id="thu-1230" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">12:30–2:00 PM</div><div class="label">Lunch + break</div></div></label>
+          <label class="task" data-id="thu-1400" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">2:00–2:30 PM</div><div class="label">Quick admin / eClass check</div></div></label>
+          <label class="task" data-id="thu-1430"><input type="checkbox"><div class="task-main"><div class="time">2:30–4:00 PM</div><div class="label">ENVS 2201 Lecture</div><div class="meta">HNE 038</div></div></label>
+          <label class="task" data-id="thu-1600" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">4:00–4:30 PM</div><div class="label">Break</div></div></label>
+          <label class="task" data-id="thu-1630"><input type="checkbox"><div class="task-main"><div class="time">4:30–5:30 PM</div><div class="label">ENVS 2201 Tutorial</div><div class="meta">HNE B10</div></div></label>
+          <label class="task" data-id="thu-1730" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">5:30–6:15 PM</div><div class="label">Dinner + real break</div></div></label>
+          <label class="task" data-id="thu-1815" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">6:15–7:45 PM</div><div class="label">Deep Work Block #1</div><div class="meta">Highest-priority assignment, lab, project, midterm study, or upcoming reading</div></div></label>
+          <label class="task" data-id="thu-1945" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">7:45–8:00 PM</div><div class="label">Break + walk</div></div></label>
+          <label class="task" data-id="thu-2000" data-kind="study"><input type="checkbox"><div class="task-main"><div class="time">8:00–8:45 PM</div><div class="label">Deep Work Block #2</div><div class="meta">Finish work, organize notes, submit, or check deadlines</div></div></label>
+          <label class="task" data-id="thu-2045" data-kind="break"><input type="checkbox"><div class="task-main"><div class="time">~8:45 PM</div><div class="label">Leave York</div><div class="meta">Night completely done</div></div></label>
+        </div>
+      </article>
+
+      <article class="day" data-day="5">
+        <div class="day-head"><div class="topline"><h2>Friday</h2><span class="today-pill">Today</span></div><div class="day-note">Protected day off</div></div>
+        <div class="off-day">
+          <div class="off-icon">☀️</div>
+          <strong>No scheduled university work.</strong>
+          No recurring reading block. No mandatory “just one hour.” Friday stays protected unless you deliberately use it for an exceptional exam or deadline week.
+        </div>
+      </article>
+    </section>
+
+    <section class="progress-panel">
+      <div class="progress-top">
+        <div><h3 class="progress-title">Weekly Progress</h3><div class="progress-copy" id="progressCopy">0 of 0 blocks complete</div></div>
+        <div class="progress-number" id="progressNumber">0%</div>
+      </div>
+      <div class="bar" aria-label="Weekly progress"><div class="fill" id="progressFill"></div></div>
+      <div class="progress-bottom">
+        <span id="resetText">Automatically resets every Monday.</span>
+        <button id="resetButton" type="button">Reset this week</button>
+      </div>
+    </section>
+
+    <div class="footer-note">Progress is saved only in this browser. The schedule itself stays fixed until the site is updated.</div>
+  </main>
+
+  <script>
+    const taskEls = [...document.querySelectorAll('.task[data-id]')];
+    const inputs = taskEls.map(t => t.querySelector('input'));
+    const progressFill = document.getElementById('progressFill');
+    const progressNumber = document.getElementById('progressNumber');
+    const progressCopy = document.getElementById('progressCopy');
+    const weekBadge = document.getElementById('weekBadge');
+    const resetText = document.getElementById('resetText');
+
+    function getMonday(date = new Date()) {
+      const d = new Date(date);
+      d.setHours(0,0,0,0);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+
+    function isoDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    const monday = getMonday();
+    const weekKey = `university-planner:${isoDate(monday)}`;
+
+    function formatShort(d) {
+      return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+    }
+
+    const sunday = new Date(monday);
+    sunday.setDate(sunday.getDate() + 6);
+    weekBadge.textContent = `${formatShort(monday)} – ${formatShort(sunday)}`;
+    resetText.textContent = `Automatically resets next Monday (${formatShort(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 7))}).`;
+
+    function loadState() {
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(weekKey) || '{}'); } catch (_) {}
+      taskEls.forEach(task => {
+        const input = task.querySelector('input');
+        input.checked = Boolean(saved[task.dataset.id]);
+        task.classList.toggle('checked', input.checked);
+      });
+      updateProgress();
+    }
+
+    function saveState() {
+      const state = {};
+      taskEls.forEach(task => {
+        state[task.dataset.id] = task.querySelector('input').checked;
+      });
+      localStorage.setItem(weekKey, JSON.stringify(state));
+    }
+
+    function updateProgress() {
+      const done = inputs.filter(i => i.checked).length;
+      const total = inputs.length;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      progressFill.style.width = `${pct}%`;
+      progressNumber.textContent = `${pct}%`;
+      progressCopy.textContent = `${done} of ${total} blocks complete`;
+    }
+
+    taskEls.forEach(task => {
+      const input = task.querySelector('input');
+      input.addEventListener('change', () => {
+        task.classList.toggle('checked', input.checked);
+        saveState();
+        updateProgress();
+      });
+    });
+
+    document.getElementById('resetButton').addEventListener('click', () => {
+      if (!confirm('Reset every checkbox for this week?')) return;
+      inputs.forEach(i => i.checked = false);
+      taskEls.forEach(t => t.classList.remove('checked'));
+      localStorage.removeItem(weekKey);
+      updateProgress();
+    });
+
+    const jsDay = new Date().getDay();
+    const todayDay = jsDay >= 1 && jsDay <= 5 ? jsDay : null;
+    if (todayDay) {
+      const todayCard = document.querySelector(`.day[data-day="${todayDay}"]`);
+      if (todayCard) todayCard.classList.add('today');
+    }
+
+    loadState();
+  </script>
+</body>
+</html>
